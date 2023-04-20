@@ -1,0 +1,346 @@
+{
+  "last_node_id": 17,
+  "last_link_id": 18,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        0,
+        0
+      ],
+      "size": {
+        "0": 300,
+        "1": 100
+      },
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            15
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            16,
+            17
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            18
+          ],
+          "slot_index": 2
+        }
+      ],
+      "title": "Load_Checkpoint"
+    },
+    {
+      "id": 8,
+      "type": "CLIPTextEncode",
+      "pos": [
+        300,
+        0
+      ],
+      "size": {
+        "0": 400,
+        "1": 300
+      },
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            10
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "True"
+    },
+    {
+      "id": 9,
+      "type": "CLIPTextEncode",
+      "pos": [
+        300,
+        350
+      ],
+      "size": {
+        "0": 400,
+        "1": 300
+      },
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            11
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "False"
+    },
+    {
+      "id": 10,
+      "type": "EmptyLatentImage",
+      "pos": [
+        750,
+        550
+      ],
+      "size": {
+        "0": 300,
+        "1": 150
+      },
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            12
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Size"
+    },
+    {
+      "id": 6,
+      "type": "KSampler",
+      "pos": [
+        750,
+        200
+      ],
+      "size": {
+        "0": 300,
+        "1": 300
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 15
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 10
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 11
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Sampler"
+    },
+    {
+      "id": 14,
+      "type": "VAEDecode",
+      "pos": [
+        750,
+        100
+      ],
+      "size": {
+        "0": 200,
+        "1": 50
+      },
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 3
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Decode"
+    },
+    {
+      "id": 16,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        750,
+        0
+      ],
+      "size": {
+        "0": 250,
+        "1": 50
+      },
+      "inputs": [
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": null
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Upscale"
+    },
+    {
+      "id": 12,
+      "type": "SaveImage",
+      "pos": [
+        1000,
+        0
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1
+        }
+      ],
+      "title": "Output"
+    }
+  ],
+  "links": [
+    [
+      1,
+      16,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      14,
+      0,
+      16,
+      1,
+      "IMAGE"
+    ],
+    [
+      3,
+      6,
+      0,
+      14,
+      0,
+      "LATENT"
+    ],
+    [
+      10,
+      8,
+      0,
+      6,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      11,
+      9,
+      0,
+      6,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      12,
+      10,
+      0,
+      6,
+      3,
+      "LATENT"
+    ],
+    [
+      15,
+      1,
+      0,
+      6,
+      0,
+      "MODEL"
+    ],
+    [
+      16,
+      1,
+      1,
+      8,
+      0,
+      "CLIP"
+    ],
+    [
+      17,
+      1,
+      1,
+      9,
+      0,
+      "CLIP"
+    ],
+    [
+      18,
+      1,
+      2,
+      14,
+      1,
+      "VAE"
+    ]
+  ]
+}
