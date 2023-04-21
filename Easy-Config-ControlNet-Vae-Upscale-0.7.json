@@ -1,0 +1,514 @@
+{
+  "last_node_id": 24,
+  "last_link_id": 27,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        0,
+        0
+      ],
+      "size": {
+        "0": 300,
+        "1": 100
+      },
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            15
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            16,
+            17
+          ],
+          "slot_index": 1
+        }
+      ],
+      "title": "Load Checkpoint"
+    },
+    {
+      "id": 23,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        0,
+        150
+      ],
+      "size": {
+        "0": 300,
+        "1": 60
+      },
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            27
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Load_Upscale"
+    },
+    {
+      "id": 22,
+      "type": "VAELoader",
+      "pos": [
+        0,
+        250
+      ],
+      "size": {
+        "0": 300,
+        "1": 60
+      },
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            24
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Load Vae"
+    },
+    {
+      "id": 18,
+      "type": "ControlNetLoader",
+      "pos": [
+        0,
+        350
+      ],
+      "size": {
+        "0": 300,
+        "1": 60
+      },
+      "outputs": [
+        {
+          "name": "CONTROL_NET",
+          "type": "CONTROL_NET",
+          "links": [
+            20
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Load ControlNet"
+    },
+    {
+      "id": 19,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        450
+      ],
+      "size": {
+        "0": 300,
+        "1": 400
+      },
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            23
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Load Pose"
+    },
+    {
+      "id": 8,
+      "type": "CLIPTextEncode",
+      "pos": [
+        350,
+        0
+      ],
+      "size": {
+        "0": 400,
+        "1": 300
+      },
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            21
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "True"
+    },
+    {
+      "id": 9,
+      "type": "CLIPTextEncode",
+      "pos": [
+        350,
+        350
+      ],
+      "size": {
+        "0": 400,
+        "1": 300
+      },
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            11
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "False"
+    },
+    {
+      "id": 20,
+      "type": "ControlNetApply",
+      "pos": [
+        800,
+        0
+      ],
+      "size": {
+        "0": 300,
+        "1": 100
+      },
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 21
+        },
+        {
+          "name": "control_net",
+          "type": "CONTROL_NET",
+          "link": 20
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 23
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            22
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "ControlNet"
+    },
+    {
+      "id": 10,
+      "type": "EmptyLatentImage",
+      "pos": [
+        1150,
+        550
+      ],
+      "size": {
+        "0": 300,
+        "1": 150
+      },
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            12
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Size"
+    },
+    {
+      "id": 6,
+      "type": "KSampler",
+      "pos": [
+        1149,
+        206
+      ],
+      "size": {
+        "0": 300,
+        "1": 300
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 15
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 22
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 11
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Sampler",
+      "widgets_values": [
+        0,
+        "randomize",
+        50,
+        8,
+        "ddim",
+        "karras",
+        1
+      ]
+    },
+    {
+      "id": 14,
+      "type": "VAEDecode",
+      "pos": [
+        1150,
+        100
+      ],
+      "size": {
+        "0": 200,
+        "1": 50
+      },
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 3
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            25
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Decode"
+    },
+    {
+      "id": 24,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        1150,
+        0
+      ],
+      "size": {
+        "0": 250,
+        "1": 50
+      },
+      "inputs": [
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 27
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 25
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            26
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Upscale"
+    },
+    {
+      "id": 12,
+      "type": "SaveImage",
+      "pos": [
+        1500,
+        0
+      ],
+      "size": {
+        "0": 700,
+        "1": 700
+      },
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 26
+        }
+      ],
+      "title": "Output",
+      "widgets_values": [
+        "Easy-ComfyUI-CNVU"
+      ]
+    }
+  ],
+  "links": [
+    [
+      3,
+      6,
+      0,
+      14,
+      0,
+      "LATENT"
+    ],
+    [
+      11,
+      9,
+      0,
+      6,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      12,
+      10,
+      0,
+      6,
+      3,
+      "LATENT"
+    ],
+    [
+      15,
+      1,
+      0,
+      6,
+      0,
+      "MODEL"
+    ],
+    [
+      16,
+      1,
+      1,
+      8,
+      0,
+      "CLIP"
+    ],
+    [
+      17,
+      1,
+      1,
+      9,
+      0,
+      "CLIP"
+    ],
+    [
+      20,
+      18,
+      0,
+      20,
+      1,
+      "CONTROL_NET"
+    ],
+    [
+      21,
+      8,
+      0,
+      20,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      22,
+      20,
+      0,
+      6,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      23,
+      19,
+      0,
+      20,
+      2,
+      "IMAGE"
+    ],
+    [
+      24,
+      22,
+      0,
+      14,
+      1,
+      "VAE"
+    ],
+    [
+      25,
+      14,
+      0,
+      24,
+      1,
+      "IMAGE"
+    ],
+    [
+      26,
+      24,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      27,
+      23,
+      0,
+      24,
+      0,
+      "UPSCALE_MODEL"
+    ]
+  ]
+}
